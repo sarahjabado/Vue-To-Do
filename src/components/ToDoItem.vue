@@ -3,6 +3,7 @@
     <div class="check">
       <input type="checkbox" :id="itemId" @click="updateCheckedStatus()" />
     </div>
+    <div class="itemTicket"><label :for="itemId">{{ticketProp}}</label></div>
     <div class="itemText"><label :for="itemId">{{text}}</label></div>
   </div>
 </template>
@@ -21,6 +22,10 @@ export default {
     done: {
       type: Boolean,
       default: false
+    },
+    ticket: {
+      type: String,
+      default: null
     }
   },
   data () {
@@ -29,6 +34,12 @@ export default {
     }
   },
   computed: {
+    ticketProp () {
+      if (!this.ticket) {
+        return 'None'
+      }
+      return this.ticket
+    },
     itemId () {
       return 'item' + this.id
     },
@@ -77,12 +88,26 @@ export default {
       vertical-align: middle;
     }
   }
+  .itemTicket {
+    display: table-cell;
+    width: 20%;
+    border-left: solid 1px rgba(0,0,0,.05);
+    color: #666;
+
+    &>label {
+      line-height: 50px;
+      vertical-align: middle;
+      display: inline-block;
+      width: 100%;
+      cursor: pointer;
+    }
+  }
   .itemText {
     display: table-cell;
     height: 50px;
     padding-left: 6px;
     border-left: solid 1px rgba(0,0,0,.05);
-    width: 90%;
+    width: 70%;
     text-align: left;
 
     &>label {

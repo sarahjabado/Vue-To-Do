@@ -6,6 +6,7 @@
     :id="item.id"
     :text="item.text"
     :done="item.done"
+    :ticket="item.ticket"
     ></ToDoItem>
     <div v-if="noItems" class="noItems">
       <i>There are no items in your To Do List. Add one to get started.</i>

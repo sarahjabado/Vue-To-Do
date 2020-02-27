@@ -5,9 +5,16 @@
     :listItems="listItems"
     >
     </ToDoList>
-    <button class="controls" @click="toggleAddForm" id="toggleButton">Add New</button> <button @click="clear">Clear Items</button> <button @click="clearDone" style="display: none;">Clear Completed Items</button>
+    <button class="controls" @click="toggleAddForm" id="toggleButton">Add New</button> <button @click="clearDone" style="display: none;">Clear Completed Items</button> <button id="toggleButton2" @click="toggleShowRawData">Show Raw Data</button>
     <div v-if="showAddForm" class="controls">
-      <input type="text" id="addTextField" placeholder="New Item Name"> <button @click="saveAddNew">Add New Item</button>
+      <input type="text" id="addTicketField" placeholder="Item Ticket"> <input type="text" id="addTextField" placeholder="New Item Name"> <button @click="saveAddNew">Add New Item</button>
+    </div>
+    <div v-if="showDataForm" class="dataContainerForm">
+      <textarea id="dataContainer" v-model="rawData"></textarea><br>
+      <button @click="loadData">Upload Raw Data</button>
+    </div>
+    <div class="clearActions">
+      <button @click="clear" :disabled="disableClearItems">Clear Items</button>
     </div>
   </div>
 </template>
@@ -21,18 +28,43 @@ export default {
   data () {
     return {
       showAddForm: false,
+      showDataForm: false,
+      disableClearItems: true,
       listItems: []
     }
   },
   components: {
     ToDoList
   },
+  computed: {
+    rawData: function () {
+      return JSON.stringify(this.listItems)
+    },
+    availableTickets: function () {
+      const tickets = []
+      this.listItems.forEach((item) => {
+        if (tickets.indexOf(item.ticket) !== -1) {
+          tickets.push(item.ticket)
+        }
+      })
+      return 1
+    }
+  },
   watch: {
     showAddForm: function (n) {
       document.getElementById('toggleButton').innerText = (n === true ? 'Cancel' : 'Add New')
       return 1
     },
+    showDataForm: function (n) {
+      document.getElementById('toggleButton2').innerText = (n === true ? 'Collapse Raw Data' : 'Show Raw data')
+      return 1
+    },
     listItems: function (items) {
+      if (items.length === 0) {
+        this.disableClearItems = true
+      } else {
+        this.disableClearItems = false
+      }
       window.localStorage.setItem('toDoItems', JSON.stringify(items))
     }
   },
@@ -51,6 +83,10 @@ export default {
     },
     saveAddNew: function () {
       const value = document.getElementById('addTextField').value
+      const ticket = document.getElementById('addTicketField').value
+      if (!value) { // Value is mandatory.
+        return
+      }
       let oldId = 0
       if (this.listItems.length !== 0) {
         oldId = this.listItems.slice(-1)[0].id
@@ -58,6 +94,7 @@ export default {
       this.listItems.push({
         id: oldId + 1,
         text: value,
+        ticket: ticket,
         done: false
       })
       this.showAddForm = false
@@ -73,6 +110,17 @@ export default {
           this.listItems.splice(index, 1)
         }
       })
+    },
+    toggleShowRawData: function () {
+      if (this.showDataForm === true) {
+        this.showDataForm = false
+        return
+      }
+      this.showDataForm = true
+    },
+    loadData: function () {
+      this.listItems = JSON.parse(document.getElementById('dataContainer').value)
+      this.toggleShowRawData() // Auto collapse raw data import.
     }
   }
 }
@@ -80,6 +128,7 @@ export default {
 <style lang="scss">
   body{
     background: #e3e3e3;
+    padding-top: 22px;
   }
   .home {
     border: solid 1px rgba(0,0,0,.3);
@@ -90,6 +139,28 @@ export default {
 
     &>.controls {
       margin-top: 12px;
+
+      &div {
+        &>input {
+          padding: 6px 12px;
+        }
+      }
     }
+  }
+  textarea {
+    width: 60%;
+    margin: 20px auto;
+    height: 40%;
+    opacity: .4;
+  }
+  textarea:hover {
+    opacity: 1;
+  }
+  .dataContainerForm {
+    border-top: solid 1px rgba(0,0,0,.3);
+    margin-top: 12px;
+  }
+  .clearActions {
+    margin-top: 12px;
   }
 </style>
