@@ -1,4 +1,4 @@
-# todo
+# Simple VueJS ToDo Client
 
 ## Project setup
 ```
@@ -19,6 +19,9 @@ npm run build
 ```
 npm run lint
 ```
+
+### Notes
+Requires NodeJS version 13.9.0 and VueCLI.
 
 ### Customize configuration
 See [Configuration Reference](https://cli.vuejs.org/config/).

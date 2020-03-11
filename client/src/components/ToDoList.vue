@@ -7,13 +7,14 @@
     :text="item.text"
     :done="item.done"
     :ticket="item.ticket"
+    @completed="markComplete"
     ></ToDoItem>
     <div v-if="noItems" class="noItems">
       <i>There are no items in your To Do List. Add one to get started.</i>
     </div>
   </div>
 </template>
-<script lang="ts">
+<script>
 import Vue from 'vue'
 import ToDoItem from '@/components/ToDoItem.vue'
 
@@ -36,7 +37,9 @@ export default Vue.extend({
     }
   },
   methods: {
-
+    markComplete: function (item) {
+      this.$emit('completed', item)
+    }
   }
 })
 </script>

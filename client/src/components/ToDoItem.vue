@@ -20,8 +20,8 @@ export default {
       default: null
     },
     done: {
-      type: Boolean,
-      default: false
+      type: Number,
+      default: 0
     },
     ticket: {
       type: String,
@@ -30,7 +30,8 @@ export default {
   },
   data () {
     return {
-      isChecked: false
+      isChecked: false,
+      timer: null
     }
   },
   computed: {
@@ -70,7 +71,20 @@ export default {
     updateCheckedStatus: function () {
       const thisCheckBox = document.getElementById(this.itemId)
       this.isChecked = thisCheckBox.checked
-      this.done = this.isChecked
+      if (!thisCheckBox.checked) {
+        clearTimeout(this.timer) // Clear the timeout.
+        return
+      }
+
+      this.timer = setTimeout(() => {
+        const item = {
+          id: this.id,
+          text: this.text,
+          done: this.done,
+          ticket: this.ticket
+        }
+        this.$emit('completed', item)
+      }, 5000)
 
       return ''
     }
