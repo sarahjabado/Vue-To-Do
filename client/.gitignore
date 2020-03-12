@@ -21,3 +21,4 @@ yarn-error.log*
 *.sw?
 
 .editorconfig
+docker-compose.yml

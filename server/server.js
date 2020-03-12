@@ -1,13 +1,13 @@
 var sqlite3 = require('sqlite3').verbose();
 var ws = require('ws').Server;
-var server = new ws({ port: 9001 }) // see `ws` docs for other options
+var server = new ws({port: 9001}); // see `ws` docs for other options
 var db = new sqlite3.Database('./database.sqlite');
 
 try {
   db.serialize(function () {
     'use strict';
 
-    console.log('Creating database.');
+    console.log('Creating database if it doesn\'t exist.');
     db.run("CREATE TABLE if not exists items (id INTEGER PRIMARY KEY AUTOINCREMENT, text TEXT, done BOOL, ticket TEXT)");
     console.log('Done!');
 
