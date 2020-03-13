@@ -1,6 +1,5 @@
 FROM node:13
 COPY . /home/node/client
-RUN rm -rf node_modules
 WORKDIR /home/node/client
 RUN npm install --verbose
 RUN npm uninstall node-sass && npm install node-sass --sass-binary-name=linux-x64-79
