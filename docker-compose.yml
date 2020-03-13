@@ -1,0 +1,24 @@
+version: '3'
+services:
+    server:
+        build:
+          context: ./server
+        command: node server.js
+        ports:
+          - "127.0.0.1:9001:9001/tcp"
+        volumes:
+          - ./server:/home/node/server
+        working_dir: /home/node/server
+        environment:
+            FLASK_ENV: development
+    client:
+      build:
+        context: ./client
+      command: npm run serve
+      ports:
+        - "9000:8080"
+      volumes:
+        - ./client:/home/node/client
+      working_dir: /home/node/client
+      environment:
+          FLASK_ENV: development
