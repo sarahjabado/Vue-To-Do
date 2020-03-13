@@ -117,7 +117,11 @@ export default {
           if (!this.data.item) {
             console.log('Nothing to delete')
           } else {
-            this.listItems.splice(this.data.item, 1)
+            this.listItems.forEach((item, index) => {
+              if (item.id === this.data.item.id) {
+                this.listItems.splice(index, 1)
+              }
+            })
           }
           break
       }
